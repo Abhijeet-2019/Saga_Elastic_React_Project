@@ -8,9 +8,8 @@ import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
 @Slf4j
-@EnableCaching
 /**
- * Main Startup Class for Elastic Search..
+ * Main Startup Class for ElasticSearch..
  */
 public class ElasticServiceStartUP {
     public static void main(String[] args) {
