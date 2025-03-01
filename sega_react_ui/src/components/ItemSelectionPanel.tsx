@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, ReactNode } from "react";
+
 
 import styled from "styled-components";
 import { Button } from "react-bootstrap";
@@ -9,7 +10,7 @@ import { sendHttpPersistRequest } from "../service/HttpService"
 
 import { ItemDetails } from "../models/itemDetails";
 import { InventoryTransaction } from "../models/InventoryTransaction";
-
+import { fetchItemCodeList } from "../service/HttpService";
 
 import { OrderItemObject } from "../models/OrderItemObject";
 
@@ -93,6 +94,7 @@ const modalbackdrop = styled.div`
 interface AddItemPanelProps {
     isAddPanelTab: boolean;
     addToCheckList: (orderDetailsObj: OrderItemObject) => void;
+    children?: ReactNode; // Add this line
 }
 
 const ItemSelectionPanel = (props: AddItemPanelProps) => {
@@ -119,7 +121,7 @@ const ItemSelectionPanel = (props: AddItemPanelProps) => {
         setItemCategotry(e.target.value);
         if (!props.isAddPanelTab) {
             console.log("Fetching all added item code for Category" + e.target.value);
-            // loadItemCodeList(e.target.value);
+            loadItemCodeList(e.target.value);
         }
     }
 
@@ -131,22 +133,25 @@ const ItemSelectionPanel = (props: AddItemPanelProps) => {
     }
 
 
-    // const loadItemCodeList = async (selectedItemCategory: String): Promise<any> => {
-    //     let result;
-    //     if (selectedItemCategory != "" || selectedItemCategory != null) {
-    //         console.log(" The Selected Item ====== " + selectedItemCategory);
-    //         try {
-    //             result = await fetchItemCodeList(selectedItemCategory);
-    //             console.log("The Result Map we receive--->>" + result.data)
-    //             const mapData = result.data;
-    //             setItemCodeList(Object.keys(mapData));
-    //             setItemPriceMap(new Map(Object.entries(mapData)));
-    //         } catch (error) {
-    //             console.log(error);
-    //             // throw error;
-    //         }
-    //     }
-    // }
+    const loadItemCodeList = async (selectedItemCategory: String): Promise<any> => {
+        let result;
+        if (selectedItemCategory != "" || selectedItemCategory != null) {
+            console.log(" The Selected Item ====== " + selectedItemCategory);
+            try {
+                result = await fetchItemCodeList(selectedItemCategory);
+                console.log("The Result Map we receive--->>" + result.data)
+                const mapData = result.data;
+                console.log("HI "+Object.keys(mapData))
+                setItemCodeList(Object.keys(mapData));   
+                // setItemCodeList(mapData);
+
+                setItemPriceMap(new Map(Object.entries(mapData)));
+            } catch (error) {
+                console.log(error);
+                // throw error;
+            }
+        }
+    }
 
     const itemTransaction: InventoryTransaction
         = {
@@ -204,6 +209,7 @@ const ItemSelectionPanel = (props: AddItemPanelProps) => {
     }
 
     const saveNewItems = async (itemDetails: ItemDetails): Promise<any> => {
+        alert("HI");
         let response;
         try {
             response = await sendHttpPersistRequest(itemDetails);
@@ -333,7 +339,7 @@ const ItemSelectionPanel = (props: AddItemPanelProps) => {
                                 <div></div>
                             ) : (
                                 <Button className="primary" onClick={addItenmTocheckList}>
-                                    Add to CheckList
+                                    +
                                 </Button>
                             )
                         }
