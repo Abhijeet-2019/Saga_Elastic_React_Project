@@ -1,11 +1,13 @@
 package com.segaExamples.UserService.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.* ;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -34,12 +36,28 @@ public class Users {
     @Column(name = "last_login_time")
     private Timestamp lastLoginTime;
 
+    @Column(name = "create_time")
+    private Timestamp createTime;
+
+
+    @Transient
+    private String userAutorities;
+
     @OneToOne(mappedBy = "users", fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private UserDetails userDetails;
 
-    @Transient
-    private boolean isValid;
+
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    @JsonIgnore
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+        private Set<Authorities> authorities;
+
+    public void addAuthorities(Set<Authorities> authorities)
+    {
+        authorities.forEach(authorities1 -> authorities1.setUsers(this));
+        this.setAuthorities(authorities);
+    }
 
     public void addUserDetails(UserDetails userDetails){
         userDetails.setUsers(this);

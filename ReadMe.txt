@@ -10,4 +10,5 @@ paymentService -->8081
 userService -->8084
 elasticService-->8083
 
+AdminServer-->8085
 The docker compose file is used when we need to run Kafka and Zookeeper in docker desktop
