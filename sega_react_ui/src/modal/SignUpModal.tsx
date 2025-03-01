@@ -32,27 +32,27 @@ const SignUpModal = (props: SignUpModalProps) => {
     const [state, setState] = useState('');
     const [pinCode, setPinCode] = useState(0);
     const [amountInWallet, setAmountiNwallet] = useState(0);
-
+    const [userAutorities ,setUserAuthorities] = useState(''); 
 
 
     const addCustomerDetails = (e: React.FormEvent) => {
-
-        if (validateUserCredentials()) {
+        if (!validateUserCredentials()) {
+            console.log("Error")
             return;
         }
 
         const userDetails: UserDetails = {
-            address, cellNo, city, state, pinCode, amountInWallet
+            address, cellNo, city, state, pinCode, amountInWallet, userAutorities
         }
 
         const requestBody: User =
         {
-            email, password, userName, lastLoginTime: getCurrentDate(), valid: false, userDetails
+            email, password, userName, lastLoginTime: getCurrentDate(), create_time : getCurrentDate(),valid: false, userDetails
         };
         console.log("The Request Body---->" + requestBody);
         const result = signUpUserDetails(requestBody);
         console.log(" The result " + result);
-
+        props.onClose();
     }
     const closeSignUp = (e: React.FormEvent) => {
         props.onClose();
@@ -163,13 +163,22 @@ const SignUpModal = (props: SignUpModalProps) => {
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row}>
-                    <Col sm="8">
+                    <Col sm="4">
                         <label htmlFor="amountInWallet">Add Amount In Wallet (INR) *:</label>
                         <input className="form-control"
                             type="number"
                             id="amountInWallet"
                             value={amountInWallet}
                             onChange={(e) => setAmountiNwallet(e.target.valueAsNumber)}
+                            required />
+                    </Col>
+                    <Col sm="4">
+                        <label htmlFor="userAutorities">User Roles (separate by , ) *</label>
+                        <input className="form-control"
+                            type="text"
+                            id="userAutorities"
+                            value={userAutorities}
+                            onChange={(e) => setUserAuthorities(e.target.value)}
                             required />
                     </Col>
                     <Col sm="2" >

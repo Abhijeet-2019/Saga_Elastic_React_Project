@@ -6,4 +6,5 @@ interface UserDetails
     state :String,
     pinCode :Number,    
     amountInWallet : Number,
+    userAutorities:String
 }

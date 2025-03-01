@@ -4,6 +4,7 @@ interface User  {
     password :string,
     userName :string,
     lastLoginTime : string,
+    create_time :string,
     valid : boolean,
     userDetails : UserDetails
 }

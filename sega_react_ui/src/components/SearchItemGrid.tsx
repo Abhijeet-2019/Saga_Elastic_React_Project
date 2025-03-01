@@ -23,11 +23,13 @@ const SearchItemGrid = (props : SearhItemGridFetched) => {
                     <AgGridReact
                     rowData={props.searchGridResults}
                     columnDefs={defaultColumnDef}
-                    defaultColDef={{
+                    defaultColDef={
+                        {
                         flex: 1, // Makes columns stretch to fill available space
                         minWidth: 150,
                         resizable: true,
-                    }}
+                    }
+                }
                 />
             </div>
         </div>

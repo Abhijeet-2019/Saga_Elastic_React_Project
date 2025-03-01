@@ -41,6 +41,7 @@ const LoginModal = (props: LoginModalProps) => {
     const [email, setEmail] = useState('abhijeet.mohanty001@gmail.com');
     const [password, setPassword] = useState('aaa');
     const [user, setUser] = useState<User>();
+    const [loginFailed, setLoginFailed] = useState(false);
 
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -50,6 +51,8 @@ const LoginModal = (props: LoginModalProps) => {
 
     const checkIfUserValid = async (): Promise<any> => {
         let result;
+        const encodedCredentials = btoa(`${email}:${password}`);
+        window.sessionStorage.setItem("usersDetails", encodedCredentials);
         try {
             result = await validateLogin(email, password);
             console.log(" The Result Map we receive" + result.data)
@@ -60,9 +63,13 @@ const LoginModal = (props: LoginModalProps) => {
                 setUser(result.data);
                 props.onLogin(result.data);
                 props.onClose();
+                console.log("The Response from backend " + result.headers.get("authorization"));
+                setLoginFailed(false);
+                window.sessionStorage.setItem("Authorization", result.headers.get("authorization"));
             }
         } catch (e) {
-            console.log(e);
+            console.log("The complete error" + e);
+            setLoginFailed(true);
             props.showModelForInValidUser();
         }
     }
@@ -75,7 +82,10 @@ const LoginModal = (props: LoginModalProps) => {
         <div className="Model-Backdrop"  >
             <div className="Modal-content" onClick={(e) => e.stopPropagation()}
                 style={{ display: !showSignUpModal ? "block" : "none" }}  >
-                <h2>Login Please</h2>
+                {loginFailed ?
+                    (<small>In valid Credentials please re-try </small>)
+                    : (<h2>Login Please</h2>)
+                }
 
                 <form onSubmit={handleSubmit}>
                     <div className="Form-group">
